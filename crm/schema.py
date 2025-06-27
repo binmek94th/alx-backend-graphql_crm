@@ -6,22 +6,35 @@ from django.db import transaction
 from django.utils import timezone
 import re
 
+from graphene_django.filter import DjangoFilterConnectionField
+
+from .filters import CustomerFilter, OrderFilter, ProductFilter
 from .models import Customer, Product, Order
+
 
 class CustomerType(DjangoObjectType):
     class Meta:
         model = Customer
         fields = "__all__"
+        filterset_class = CustomerFilter
+        order_by = ['name', 'email', 'created_at', 'phone']
+
 
 class ProductType(DjangoObjectType):
     class Meta:
         model = Product
         fields = "__all__"
+        filterset_class = ProductFilter
+        order_by = ['name', 'price', 'stock']
+
 
 class OrderType(DjangoObjectType):
     class Meta:
         model = Order
         fields = "__all__"
+        filterset_class = OrderFilter
+        order_by = ['total_amount', 'order_date']
+
 
 def validate_phone(phone):
     if phone is None:
@@ -29,6 +42,7 @@ def validate_phone(phone):
     pattern = re.compile(r'^(\+\d{10,15}|(\d{3}-\d{3}-\d{4}))$')
     if not pattern.match(phone):
         raise ValidationError("Invalid phone format. Expected +1234567890 or 123-456-7890.")
+
 
 class CreateCustomer(graphene.Mutation):
     customer = graphene.Field(CustomerType)
@@ -196,7 +210,9 @@ class CreateOrder(graphene.Mutation):
 
 
 class Query(graphene.ObjectType):
-    customers = graphene.List(CustomerType)
+    all_customers = DjangoFilterConnectionField(Customer)
+    all_products = DjangoFilterConnectionField(Product)
+    all_orders = DjangoFilterConnectionField(Order)
 
     def resolve_customers(self, info):
         return Customer.objects.all()
