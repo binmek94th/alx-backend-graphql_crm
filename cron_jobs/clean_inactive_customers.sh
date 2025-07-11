@@ -4,7 +4,10 @@
 set -e
 
 # Activate the virtual environment
-source .venv/bin/activate
+source "$(dirname "$0")/../.venv/bin/activate"
+
+# Navigate to project root
+cd "$(dirname "$0")/.."
 
 # Log file
 LOG_FILE="/tmp/customer_cleanup_log.txt"
