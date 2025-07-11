@@ -6,7 +6,6 @@ set -e
 # Activate the virtual environment
 source .venv/bin/activate
 
-
 # Log file
 LOG_FILE="/tmp/customer_cleanup_log.txt"
 
