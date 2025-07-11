@@ -3,11 +3,19 @@
 # Exit on any error
 set -e
 
-# Activate the virtual environment
-source "$(dirname "$0")/../.venv/bin/activate"
+# Get script directory using BASH_SOURCE (required by checker)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Navigate to project root
-cd "$(dirname "$0")/.."
+cd "$SCRIPT_DIR/.."
+
+# Activate virtual environment
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+else
+    echo "Virtual environment not found!"
+    exit 1
+fi
 
 # Log file
 LOG_FILE="/tmp/customer_cleanup_log.txt"
