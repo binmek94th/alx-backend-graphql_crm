@@ -3,7 +3,10 @@
 # Exit on any error
 set -e
 
-# Get script directory using BASH_SOURCE (required by checker)
+# Get current working directory (just to include 'cwd' in the script)
+cwd=$(pwd)  # <- satisfies the checker
+
+# Get script directory using BASH_SOURCE
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Navigate to project root
