@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Exit on any error
+set -e
+
+# Activate the virtual environment
+source .venv/bin/activate
+
+
+# Log file
+LOG_FILE="/tmp/customer_cleanup_log.txt"
+
+# Run management command and capture output
+DELETED_OUTPUT=$(python3 manage.py delete_old_customers)
+
+# Log the output with timestamp
+echo "$(date): $DELETED_OUTPUT" >> "$LOG_FILE"
